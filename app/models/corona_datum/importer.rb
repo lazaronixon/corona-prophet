@@ -21,11 +21,11 @@ class CoronaDatum::Importer
     end
 
     def map_attributes_for(response)
-      response.collect { |resp| { reported_at: resp['date'], state: resp['state'], confirmed: resp['confirmed'], deaths: resp['deaths'] } }
+      response.collect { |resp| { reported_at: resp['date'], state: resp['state'], confirmed: resp['confirmed'], deaths: resp['deaths'] || 0 } }
     end
 
     def decode(string)
-      ActiveSupport::JSON.decode(string)
+      ActiveSupport::JSON.decode string
     end
 
     def resource_uri
