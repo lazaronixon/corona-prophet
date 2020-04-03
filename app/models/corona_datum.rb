@@ -1,0 +1,2 @@
+class CoronaDatum < ApplicationRecord
+end

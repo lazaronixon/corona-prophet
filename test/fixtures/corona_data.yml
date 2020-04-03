@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  reported_at: 2020-04-02
+  state: MyString
+  city_id: 1
+  city: MyString
+  confirmed: 1
+  deaths: 1
+
+two:
+  reported_at: 2020-04-02
+  state: MyString
+  city_id: 1
+  city: MyString
+  confirmed: 1
+  deaths: 1
