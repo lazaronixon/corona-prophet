@@ -1,0 +1,28 @@
+@import "sass-zero/variables";
+@import "sass-zero/mixins";
+
+.navigation {
+  box-shadow: $shadow;
+
+  &__title {
+    font-size: $text-xl;
+  }
+
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: $size-4 $size-10;
+    margin:  0 auto;
+    max-width: $breakpoint-lg;
+  }
+}
+
+@media (max-width: $breakpoint-md - 1) {
+  .navigation {
+    &__container {
+      padding: $size-4 $size-2;
+    }
+  }
+}

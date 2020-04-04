@@ -21,3 +21,8 @@
  .turbolinks-progress-bar {
   background-color: $breadboard-primary;
 }
+
+.btn--small {
+  font-size: $text-sm;
+  padding: $size-1 $size-3;
+}
