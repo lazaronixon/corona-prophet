@@ -2,7 +2,7 @@ namespace :scheduler do
   task :update_corona_data => :environment do
     puts 'Updating corona data...'
     import_corona_data
-    prophesy_corona_data
+    enrich_corona_data
     puts 'done'
   end
 
@@ -12,8 +12,8 @@ namespace :scheduler do
       CoronaDatum::Importer.new.run
     end
 
-    def prophesy_corona_data
-      puts 'propheting data...'
+    def enrich_corona_data
+      puts 'enriching data...'
       CoronaDatum::Prophetizer.new.run
     end
 end

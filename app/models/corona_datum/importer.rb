@@ -1,7 +1,7 @@
 class CoronaDatum::Importer
   def run
     truncate_table
-    insert_data_from_api
+    persist_data_from_csv
   end
 
   private
@@ -9,26 +9,25 @@ class CoronaDatum::Importer
       CoronaDatum.delete_all
     end
 
-    def insert_data_from_api
-      results = request_data['results']
-      mapped_attributes = map_attributes_for(results)
-
-      CoronaDatum.insert_all! mapped_attributes
+    def persist_data_from_csv
+      extract_csv.each do |row|
+        CoronaDatum.create! reported_at: row['date'], state: row['state'], confirmed: row['confirmed'].to_i, deaths: row['deaths'].to_i
+      end
     end
 
-    def request_data
-       decode Net::HTTP.get(resource_uri)
+    def extract_csv
+      build_csv.select { |r| r['place_type'] == 'state' }
     end
 
-    def map_attributes_for(response)
-      response.collect { |resp| { reported_at: resp['date'], state: resp['state'], confirmed: resp['confirmed'], deaths: resp['deaths'] || 0 } }
+    def build_csv
+      CSV.new(build_zip_reader, headers: true)
     end
 
-    def decode(string)
-      ActiveSupport::JSON.decode string
+    def build_zip_reader
+      Zlib::GzipReader.new(open(resource_url))
     end
 
-    def resource_uri
-      URI('https://brasil.io/api/dataset/covid19/caso/data?place_type=state')
+    def resource_url
+      'https://data.brasil.io/dataset/covid19/caso.csv.gz'
     end
 end
