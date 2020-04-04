@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_03_012521) do
+ActiveRecord::Schema.define(version: 2020_04_04_212246) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,9 @@ ActiveRecord::Schema.define(version: 2020_04_03_012521) do
     t.string "state"
     t.integer "confirmed"
     t.integer "deaths"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.boolean "prophetized", default: false
   end
 
 end

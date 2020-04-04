@@ -47,7 +47,7 @@ class CoronaDatum::Prophetizer
       deaths_array    = deaths.map(&:to_h)
 
       [confirmed_array, deaths_array].transpose.each do |confirmed_data, deaths_data|
-        CoronaDatum.create!(reported_at: confirmed_data['ds'], state: state, confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'])
+        CoronaDatum.create!(reported_at: confirmed_data['ds'], state: state, confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true)
       end
     end
 end

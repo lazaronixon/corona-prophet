@@ -5,6 +5,8 @@ class CreateCoronaData < ActiveRecord::Migration[6.0]
       t.string :state
       t.integer :confirmed
       t.integer :deaths
+
+      t.timestamps
     end
   end
 end

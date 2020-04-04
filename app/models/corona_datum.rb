@@ -3,6 +3,8 @@ class CoronaDatum < ApplicationRecord
   scope :conformatively, -> { order confirmed: :desc }
 
   class << self
+    include ApplicationHelper
+
     def series_for(state, field)
       where(state: state).chronologically.pluck(:reported_at, field)
     end
@@ -12,7 +14,15 @@ class CoronaDatum < ApplicationRecord
     end
 
     def summary_state
-      where(reported_at: Date.current + 6.days).conformatively
+      where(reported_at: prophet_date).conformatively
+    end
+
+    def report_date
+      where(prophetized: false).maximum(:reported_at)
+    end
+
+    def prophet_date
+      where(prophetized: true).maximum(:reported_at)
     end
 
     def datasource_for(state, field, label)

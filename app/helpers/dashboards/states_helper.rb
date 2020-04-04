@@ -1,2 +1,0 @@
-module Dashboards::StatesHelper
-end
