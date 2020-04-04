@@ -1,7 +1,7 @@
 <% content_for :page_title, "Profeta do corona" %>
 
 <header class="align--center push-xl--bottom">
-  <h1>Previsão de casos confirmados para daqui a 7 dias</h1>
+  <h1>Previsão de casos confirmados para <%= l @prophet_date, format: :short %></h1>
   <p class="txt--subtle">Usando inteligencia artificial o <span class="txt--highlight">profeta do corona</span> calcula todos os dias uma previsão de casos confirmados e mortes por corona vírus em cada estado.</p>
 </header>
 
@@ -23,5 +23,12 @@
         </tr>
       <% end %>
     </tbody>
+    <tfoot>
+      <tr>
+        <td></td>
+        <td class="align--right txt--bold"><%= number_with_delimiter @report.sum(&:confirmed) %></td>
+        <td class="align--right txt--bold"><%= number_with_delimiter @report.sum(&:deaths) %></td>
+      </tr>
+    </tfoot>
   </table>
 </section>

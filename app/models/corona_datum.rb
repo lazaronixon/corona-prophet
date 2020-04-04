@@ -2,6 +2,10 @@ class CoronaDatum < ApplicationRecord
   scope :chronologically, -> { order :reported_at }
   scope :conformatively, -> { order confirmed: :desc }
 
+  def color
+    prophetized ? '#1a202c' : '#a0aec0'
+  end
+
   class << self
     include ApplicationHelper
 
@@ -30,6 +34,7 @@ class CoronaDatum < ApplicationRecord
         labels: where(state: state).chronologically.pluck(:reported_at),
         datasets: [{
           label: label,
+          pointBackgroundColor: where(state: state).chronologically.map(&:color),
           data: where(state: state).chronologically.pluck(field)
         }]
       }
