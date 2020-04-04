@@ -8,6 +8,9 @@ Bundler.require(*Rails.groups)
 
 module CoronaProphet
   class Application < Rails::Application
+    config.time_zone                      = 'Brasilia'
+    config.i18n.default_locale            = :pt
+
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 

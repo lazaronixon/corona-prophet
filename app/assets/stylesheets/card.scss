@@ -1,0 +1,22 @@
+@import "sass-zero/variables";
+
+.card {
+  padding: $size-8 $size-10;
+  box-shadow: $shadow-lg;
+  border-width: $border;
+  border-radius: $rounded;
+  text-align: center;
+  width: $size-64;
+
+  &__title {
+    font-size: $text-base;
+    letter-spacing: $tracking-wider;
+    text-transform: uppercase;
+    color: $gray-500;
+  }
+
+  &__content {
+    font-size: $text-3xl;
+    font-weight: $font-bold;
+  }
+}

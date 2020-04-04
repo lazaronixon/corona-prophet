@@ -1,0 +1,29 @@
+<%= content_for :page_title, params[:id] %>
+
+<header class="align--center push-xl--bottom">
+  <h1><%= params[:id] %></h1>
+</header>
+
+<section class="flex flex--justify-around push-2xl--bottom">
+  <article class="card">
+    <div class="card__title">Confirmados</div>
+    <div class="card__content"><%= number_with_delimiter @report.confirmed %></div>
+  </article>
+
+  <article class="card">
+    <div class="card__title">Mortes</div>
+    <div class="card__content"><%= number_with_delimiter @report.deaths %></div>
+  </article>
+</section>
+
+<section>
+  <article class="align--center push-2xl--bottom">
+    <h1>Casos confirmados</h1>
+    <canvas data-controller="chart-line" data-chart-line-datasource="<%= @confirmed.to_json %>" width="400" height="200"></canvas>
+  </article>
+
+  <article class="align--center push-2xl--bottom">
+    <h1>Mortes por COVID-19</h1>
+    <canvas data-controller="chart-line" data-chart-line-datasource="<%= @deaths.to_json %>" width="400" height="200"></canvas>
+  </article>
+<section>

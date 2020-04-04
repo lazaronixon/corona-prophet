@@ -1,0 +1,27 @@
+<% content_for :page_title, "Profeta do corona" %>
+
+<header class="align--center push-xl--bottom">
+  <h1>Previsão de casos confirmados para daqui a 7 dias</h1>
+  <p class="txt--subtle">Usando inteligencia artificial o <span class="txt--highlight">profeta do corona</span> calcula todos os dias uma previsão de casos confirmados e mortes por corona vírus em cada estado.</p>
+</header>
+
+<section>
+  <table>
+    <thead>
+      <tr>
+        <th>UF</th>
+        <th class="align--right">Confirmados</th>
+        <th class="align--right">Mortes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @report.each do |row| %>
+        <tr>
+          <td><%= link_to row.state, dashboards_states_path(row.state) %></td>
+          <td class="align--right"><%= number_with_delimiter row.confirmed %></td>
+          <td class="align--right"><%= number_with_delimiter row.deaths %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>
