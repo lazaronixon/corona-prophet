@@ -5,13 +5,13 @@
   <p>Previsão de casos confirmados para <%= l @prophet_date, format: :short %></p>
 </header>
 
-<section class="flex flex--justify-around push-2xl--bottom">
-  <article class="card">
+<section class="flex flex--justify-between push-2xl--bottom">
+  <article class="card" style="width: 40%">
     <div class="card__title">Confirmados</div>
     <div class="card__content"><%= number_with_delimiter @report.confirmed %></div>
   </article>
 
-  <article class="card">
+  <article class="card" style="width: 40%">
     <div class="card__title">Mortes</div>
     <div class="card__content"><%= number_with_delimiter @report.deaths %></div>
   </article>
