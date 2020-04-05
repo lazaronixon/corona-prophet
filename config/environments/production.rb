@@ -60,6 +60,8 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "corona_prophet_production"
 
+  config.active_job.queue_adapter = :sidekiq
+
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
