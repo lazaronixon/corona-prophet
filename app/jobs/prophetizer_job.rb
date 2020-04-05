@@ -2,8 +2,10 @@ class ProphetizerJob < ApplicationJob
   queue_as :default
 
   def perform
-    import_corona_data
-    enrich_corona_data
+    ActiveRecord::Base.transaction do
+      import_corona_data
+      enrich_corona_data
+    end
   end
 
   private
