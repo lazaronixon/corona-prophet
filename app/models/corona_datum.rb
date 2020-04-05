@@ -10,7 +10,7 @@ class CoronaDatum < ApplicationRecord
     include ApplicationHelper
 
     def series_for(state, field)
-      where(state: state).chronologically.pluck(:reported_at, field)
+      where(state: state).chronologically.map { |data| { 'ds' => data.reported_at, 'y' => data.send(field) } }
     end
 
     def unique_states
