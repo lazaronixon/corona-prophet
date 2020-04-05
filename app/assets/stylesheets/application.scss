@@ -26,3 +26,15 @@
   font-size: $text-sm;
   padding: $size-1 $size-3;
 }
+
+.link--secondary {
+  font-weight: $font-normal;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+main {
+  padding-top: 6rem;
+}

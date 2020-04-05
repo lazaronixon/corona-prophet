@@ -1,0 +1,11 @@
+@import "sass-zero/variables";
+
+.footer {
+  text-align: center;
+  margin-top: $size-10;
+  padding: $size-6 $size-0;
+  width: $size-full;
+  background-color: $gray-200;
+  box-shadow: $shadow-lg;
+  border-top-width: $border;
+}

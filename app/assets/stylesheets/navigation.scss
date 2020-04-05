@@ -3,6 +3,10 @@
 
 .navigation {
   box-shadow: $shadow;
+  position: fixed;
+  z-index: $z-10;
+  width: $size-full;
+  background-color: $white;
 
   &__title {
     font-size: $text-xl;
@@ -12,17 +16,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    padding: $size-4 $size-10;
-    margin:  0 auto;
-    max-width: $breakpoint-lg;
+    padding-top: $size-4;
+    padding-bottom: $size-4;
+    @include make-container($size-10, $breakpoint-lg);
   }
 }
 
 @media (max-width: $breakpoint-md - 1) {
-  .navigation {
-    &__container {
-      padding: $size-4 $size-2;
-    }
+  .navigation__container {
+    padding: $size-4 $size-2;
   }
 }

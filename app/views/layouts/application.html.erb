@@ -12,11 +12,8 @@
   </head>
 
   <body>
-    <nav class="push-xl--bottom">
-      <%= render 'layouts/navigation' %>
-    </nav>
-    <main>
-      <%= yield %>
-    </main>
+    <%= render 'layouts/navigation' %>
+    <main><%= yield %></main>
+    <%= render 'layouts/footer' %>
   </body>
 </html>
