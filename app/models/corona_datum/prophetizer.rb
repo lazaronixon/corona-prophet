@@ -1,7 +1,6 @@
 class CoronaDatum::Prophetizer
   def run
     CoronaDatum.unique_states.each do |state|
-      puts "propheting #{state}..."
       confirmed = prophetize(state, :confirmed)
       deaths    = prophetize(state, :deaths)
 
