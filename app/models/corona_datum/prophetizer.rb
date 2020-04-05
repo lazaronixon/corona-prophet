@@ -35,7 +35,7 @@ class CoronaDatum::Prophetizer
       series = CoronaDatum.series_for(state, field)
       dataset_file = create_dataset_file_for(series)
 
-      parse_csv execute_script('forecasting.r', 7, dataset_file.path)
+      parse_csv execute_script('forecasting.r', 14, dataset_file.path)
     end
 
     def parse_csv(string)
