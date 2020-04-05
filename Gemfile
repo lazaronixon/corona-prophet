@@ -50,10 +50,12 @@ group :test do
   gem 'webdrivers'
 end
 
+group :production do
+  gem 'sidekiq'
+end
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'sass-zero'
 gem 'autoprefixer-rails'
-
-gem 'sidekiq'
