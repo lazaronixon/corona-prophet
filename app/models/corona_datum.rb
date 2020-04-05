@@ -22,12 +22,14 @@ class CoronaDatum < ApplicationRecord
     end
 
     def datasource_for(state, field, label)
+      result = where(state: state).chronologically.last(25)
+
       {
-        labels: where(state: state).chronologically.pluck(:reported_at),
+        labels: result.pluck(:reported_at),
         datasets: [{
           label: label,
-          pointBackgroundColor: where(state: state).chronologically.map(&:color),
-          data: where(state: state).chronologically.pluck(field)
+          pointBackgroundColor: result.map(&:color),
+          data: result.pluck(field)
         }]
       }
     end
