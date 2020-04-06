@@ -13,10 +13,6 @@ class CoronaDatum::Prophetizer
 
     def prophetize(state, field)
       series   = CoronaDatum.series_for(state, field)
-      puts '#' * 90
-      puts series.inspect
-      puts '#' * 90
-
       response = post_series_to_solver(series)
     end
 
