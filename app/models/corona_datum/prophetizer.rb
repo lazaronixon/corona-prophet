@@ -9,7 +9,7 @@ class CoronaDatum::Prophetizer
   end
 
   private
-    FORECASTING_DAYS = 14
+    FORECASTING_DAYS = 7
 
     def prophetize(state, field)
       series   = CoronaDatum.series_for(state, field)
