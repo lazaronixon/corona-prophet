@@ -23,7 +23,7 @@ class CoronaDatum::Importer
     end
 
     def extract_csv
-      build_csv.select { |r| r['place_type'] == 'state' }
+      build_csv.select { |r| r['place_type'] == 'state' && r['date'].to_date < Date.current }
     end
 
     def build_csv
