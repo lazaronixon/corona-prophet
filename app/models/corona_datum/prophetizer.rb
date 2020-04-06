@@ -1,10 +1,10 @@
 class CoronaDatum::Prophetizer
   def run
-    CoronaDatum.unique_states.each do |state|
+    CoronaDatum.unique_states.each do |state, population|
       confirmed = prophetize(state, :confirmed)
       deaths    = prophetize(state, :deaths)
 
-      insert_data_from_prophet state, confirmed, deaths
+      insert_data_from_prophet state, population, confirmed, deaths
     end
   end
 
@@ -20,9 +20,9 @@ class CoronaDatum::Prophetizer
       decode http.send(:post, '/prophet', encode(series), headers).body
     end
 
-    def insert_data_from_prophet(state, confirmed, deaths)
+    def insert_data_from_prophet(state, population, confirmed, deaths)
       [confirmed, deaths].transpose.each do |confirmed_data, deaths_data|
-        CoronaDatum.create!(reported_at: confirmed_data['ds'], state: state, confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true)
+        CoronaDatum.create!(reported_at: confirmed_data['ds'], state: state, population: population, confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true)
       end
     end
 

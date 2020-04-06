@@ -20,7 +20,7 @@ class CoronaDatum < ApplicationRecord
     end
 
     def unique_states
-      distinct.pluck(:state)
+      distinct.pluck(:state, :population)
     end
 
     def summary_state
