@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   namespace :dashboards do
     get 'states(/:id)', to: 'states#show', as: :states
+    get 'country', to: 'countries#show', as: :countries
   end
 
   get 'dashboards', to: 'dashboards#index'

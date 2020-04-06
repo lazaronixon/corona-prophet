@@ -3,11 +3,13 @@ class CoronaDatum < ApplicationRecord
   scope :conformatively, -> { order confirmed: :desc }
 
   def color
-    prophetized ? '#1a202c' : '#a0aec0'
+    prophetized? ? '#1a202c' : '#a0aec0'
   end
 
   class << self
     include ApplicationHelper
+
+    DATA_SOURCE_DAYS = 25
 
     def series_for(state, field)
       where(state: state).chronologically.map { |data| { 'ds' => data.reported_at, 'y' => data.send(field) } }
@@ -21,18 +23,20 @@ class CoronaDatum < ApplicationRecord
       where(reported_at: Date.current).conformatively
     end
 
-    def datasource_for(state, field, label)
-      result = where(state: state).chronologically.last(25)
-
-      {
-        labels: result.pluck(:reported_at),
-        datasets: [{
-          label: label,
-          pointRadius: 4,
-          pointBackgroundColor: result.map(&:color),
-          data: result.pluck(field)
-        }]
-      }
+    def datasource_state_for(state, field, label)
+      datasource_data_for where(state: state).chronologically.last(DATA_SOURCE_DAYS), field, label
     end
+
+    def datasource_country_for(field, label)
+      columns             = 'reported_at, (reported_at >= current_date) AS prophetized, SUM(confirmed) AS confirmed, SUM(deaths) AS deaths'
+      all_states_reported = 'COUNT(DISTINCT state) >= 25'
+
+      datasource_data_for select(columns).group(:reported_at).having(all_states_reported).chronologically.last(DATA_SOURCE_DAYS), field, label
+    end
+
+    private
+      def datasource_data_for(relation, field, label)
+        { labels: relation.pluck(:reported_at), datasets: [{ label: label, pointRadius: 5, pointBackgroundColor: relation.map(&:color), data: relation.pluck(field) }] }
+      end
   end
 end
