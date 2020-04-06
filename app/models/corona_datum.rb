@@ -11,6 +11,10 @@ class CoronaDatum < ApplicationRecord
 
     DATA_SOURCE_DAYS = 25
 
+    def propheted_at
+      minimum(:created_at).to_date
+    end
+
     def series_for(state, field)
       where(state: state).chronologically.map { |data| { 'ds' => data.reported_at, 'y' => data.send(field) } }
     end
@@ -20,7 +24,7 @@ class CoronaDatum < ApplicationRecord
     end
 
     def summary_state
-      where(reported_at: Date.current).conformatively
+      where(reported_at: propheted_at).conformatively
     end
 
     def datasource_state_for(state, field, label)
@@ -28,7 +32,7 @@ class CoronaDatum < ApplicationRecord
     end
 
     def datasource_country_for(field, label)
-      columns             = 'reported_at, (reported_at >= current_date) AS prophetized, SUM(confirmed) AS confirmed, SUM(deaths) AS deaths'
+      columns             = 'reported_at, (reported_at >= MIN(created_at)) AS prophetized, SUM(confirmed) AS confirmed, SUM(deaths) AS deaths'
       all_states_reported = 'COUNT(DISTINCT state) = 27'
 
       datasource_data_for select(columns).group(:reported_at).having(all_states_reported).chronologically.last(DATA_SOURCE_DAYS), field, label
