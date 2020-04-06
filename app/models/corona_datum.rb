@@ -22,7 +22,7 @@ class CoronaDatum < ApplicationRecord
     end
 
     def datasource_for(state, field, label)
-      result = where(state: state).chronologically.last(30)
+      result = where(state: state).chronologically.last(25)
 
       {
         labels: result.pluck(:reported_at),
