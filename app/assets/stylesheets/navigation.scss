@@ -23,7 +23,13 @@
 }
 
 @media (max-width: $breakpoint-md - 1) {
-  .navigation__container {
-    padding: $size-4 $size-2;
+  .navigation {
+    &__container {
+      padding: $size-4 $size-2;
+    }
+
+    &__content {
+      display: none !important;
+    }
   }
 }
