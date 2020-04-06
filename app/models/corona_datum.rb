@@ -29,7 +29,7 @@ class CoronaDatum < ApplicationRecord
 
     def datasource_country_for(field, label)
       columns             = 'reported_at, (reported_at >= current_date) AS prophetized, SUM(confirmed) AS confirmed, SUM(deaths) AS deaths'
-      all_states_reported = 'COUNT(DISTINCT state) >= 25'
+      all_states_reported = 'COUNT(DISTINCT state) = 27'
 
       datasource_data_for select(columns).group(:reported_at).having(all_states_reported).chronologically.last(DATA_SOURCE_DAYS), field, label
     end
