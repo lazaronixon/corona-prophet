@@ -31,7 +31,7 @@ class CoronaDatum < ApplicationRecord
 
     def datasource_country_for(field, label)
       datasource_data_for \
-        select('reported_at, (reported_at >= MIN(DATE(created_at))) AS prophetized, SUM(confirmed) AS confirmed, SUM(deaths) AS deaths').group(:reported_at).having('COUNT(DISTINCT state_id) = 27').chronologically.last(DATA_SOURCE_DAYS), field, label
+        select('reported_at, (reported_at >= MIN(DATE(created_at))) AS prophetized, SUM(confirmed) AS confirmed, SUM(deaths) AS deaths').group(:reported_at).chronologically.last(DATA_SOURCE_DAYS), field, label
     end
 
     private

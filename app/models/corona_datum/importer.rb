@@ -11,7 +11,7 @@ class CoronaDatum::Importer
 
     def persist_data_from_csv
       extract_csv.each do |row|
-        CoronaDatum.create! reported_at: row['date'], state: find_or_initialize_state_by(row['state'], row['estimated_population_2019']), confirmed: row['confirmed'].to_i, deaths: row['deaths'].to_i
+        CoronaDatum.create! reported_at: row['Date'], state: find_or_initialize_state_by(row['RegionCode'], row['Population']), confirmed: row['Confirmed'].to_i, deaths: row['Deaths'].to_i
       end
     end
 
@@ -23,18 +23,14 @@ class CoronaDatum::Importer
     end
 
     def extract_csv
-      build_csv.select { |r| r['place_type'] == 'state' && r['date'].to_date < Date.current }
+      build_csv.select { |r| r['CountryCode'] == 'BR' && r['RegionCode'].present? }
     end
 
     def build_csv
-      CSV.new(build_zip_reader, headers: true)
-    end
-
-    def build_zip_reader
-      Zlib::GzipReader.new(open(resource_url))
+      CSV.new(open(resource_url), headers: true)
     end
 
     def resource_url
-      'https://data.brasil.io/dataset/covid19/caso.csv.gz'
+      'https://open-covid-19.github.io/data/data.csv'
     end
 end
