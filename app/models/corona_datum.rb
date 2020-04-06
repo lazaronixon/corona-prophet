@@ -21,10 +21,6 @@ class CoronaDatum < ApplicationRecord
       where(state: state).chronologically.map { |data| { 'ds' => data.reported_at, 'y' => data.send(field) } }
     end
 
-    def unique_states
-      distinct.pluck(:state, :population)
-    end
-
     def summary_state
       where(reported_at: propheted_at).conformatively
     end
