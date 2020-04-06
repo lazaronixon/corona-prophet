@@ -10,20 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_06_052109) do
+ActiveRecord::Schema.define(version: 2020_04_06_153801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "corona_data", force: :cascade do |t|
     t.date "reported_at"
-    t.string "state"
     t.integer "confirmed"
     t.integer "deaths"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "prophetized", default: false
+    t.bigint "state_id", null: false
+    t.index ["state_id"], name: "index_corona_data_on_state_id"
+  end
+
+  create_table "states", force: :cascade do |t|
+    t.string "name"
     t.integer "population"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
 end

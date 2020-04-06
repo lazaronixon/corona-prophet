@@ -2,6 +2,8 @@ class CoronaDatum < ApplicationRecord
   scope :chronologically, -> { order :reported_at }
   scope :conformatively, -> { order confirmed: :desc }
 
+  belongs_to :state
+
   def color
     prophetized? ? '#1a202c' : '#a0aec0'
   end
@@ -33,7 +35,7 @@ class CoronaDatum < ApplicationRecord
 
     def datasource_country_for(field, label)
       columns             = 'reported_at, (reported_at >= MIN(DATE(created_at))) AS prophetized, SUM(confirmed) AS confirmed, SUM(deaths) AS deaths'
-      all_states_reported = 'COUNT(DISTINCT state) = 27'
+      all_states_reported = 'COUNT(DISTINCT state_id) = 27'
 
       datasource_data_for select(columns).group(:reported_at).having(all_states_reported).chronologically.last(DATA_SOURCE_DAYS), field, label
     end

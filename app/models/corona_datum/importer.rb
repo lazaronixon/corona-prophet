@@ -11,7 +11,14 @@ class CoronaDatum::Importer
 
     def persist_data_from_csv
       extract_csv.each do |row|
-        CoronaDatum.create! reported_at: row['date'], state: row['state'], population: row['estimated_population_2019'].to_i, confirmed: row['confirmed'].to_i, deaths: row['deaths'].to_i
+        CoronaDatum.create! reported_at: row['date'], state: find_or_initialize_state_by(row['state'], row['estimated_population_2019']), confirmed: row['confirmed'].to_i, deaths: row['deaths'].to_i
+      end
+    end
+
+    def find_or_initialize_state_by(name, population)
+      State.find_or_initialize_by(name: name) do |state|
+        state.name = name
+        state.population = population
       end
     end
 

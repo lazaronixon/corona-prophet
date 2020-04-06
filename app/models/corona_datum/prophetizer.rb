@@ -1,10 +1,10 @@
 class CoronaDatum::Prophetizer
   def run
-    CoronaDatum.unique_states.each do |state, population|
+    State.all.each do |state|
       confirmed = prophetize(state, :confirmed)
       deaths    = prophetize(state, :deaths)
 
-      insert_data_from_prophet state, population, confirmed, deaths
+      insert_data_from_prophet state, confirmed, deaths
     end
   end
 
@@ -13,6 +13,10 @@ class CoronaDatum::Prophetizer
 
     def prophetize(state, field)
       series   = CoronaDatum.series_for(state, field)
+      puts '#' * 90
+      puts series.inspect
+      puts '#' * 90
+
       response = post_series_to_solver(series)
     end
 
@@ -20,9 +24,9 @@ class CoronaDatum::Prophetizer
       decode http.send(:post, '/prophet', encode(series), headers).body
     end
 
-    def insert_data_from_prophet(state, population, confirmed, deaths)
+    def insert_data_from_prophet(state, confirmed, deaths)
       [confirmed, deaths].transpose.each do |confirmed_data, deaths_data|
-        CoronaDatum.create!(reported_at: confirmed_data['ds'], state: state, population: population, confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true)
+        CoronaDatum.create!(reported_at: confirmed_data['ds'], state: state, confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true)
       end
     end
 
@@ -33,7 +37,7 @@ class CoronaDatum::Prophetizer
     end
 
     def resource_uri
-      URI('https://corona-prophet-solver.herokuapp.com')
+      URI('http://localhost:5000')
     end
 
     def decode(string)

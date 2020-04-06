@@ -18,7 +18,7 @@
     <tbody>
       <% @report.each do |row| %>
         <tr>
-          <td><%= link_to "Previsão para #{row.state}", dashboards_states_path(row.state) %></td>
+          <td><%= link_to "Previsão para #{row.state.name}", [:dashboards, row.state] %></td>
           <td class="align--right"><%= number_with_delimiter row.confirmed %></td>
           <td class="align--right"><%= number_with_delimiter row.deaths %></td>
         </tr>
