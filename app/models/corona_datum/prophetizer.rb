@@ -37,7 +37,7 @@ class CoronaDatum::Prophetizer
     end
 
     def resource_uri
-      URI('http://localhost:5000')
+      URI('https://corona-prophet-solver.herokuapp.com')
     end
 
     def decode(string)
