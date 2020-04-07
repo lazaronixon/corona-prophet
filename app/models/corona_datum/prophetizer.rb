@@ -9,39 +9,49 @@ class CoronaDatum::Prophetizer
 
     def forecast_states
       State.all.each do |state|
-        confirmed = prophetize(:confirmed, state)
-        deaths    = prophetize(:deaths, state)
+        confirmed = calculate_state(:confirmed, state)
+        deaths    = calculate_state(:deaths, state)
 
-        insert_data_from_prophet confirmed, deaths, state
+        insert_state_data_from_prophet confirmed, deaths, state
       end
     end
 
     def forecast_country
-      confirmed = prophetize(:confirmed)
-      deaths    = prophetize(:deaths)
+      confirmed = calculate_country(:confirmed)
+      deaths    = calculate_country(:deaths)
 
-      insert_data_from_prophet confirmed, deaths
+      insert_country_data_from_prophet confirmed, deaths
     end
 
-    def prophetize(field, state = nil)
-      if state
-        post_series_to_solver CoronaDatumState.series_for(state, field)
-      else
-        post_series_to_solver CoronaDatumCountry.series_for(field)
-      end
+    def calculate_state(field, state)
+      post_series_to_solver state_series_for(state, field)
+    end
+
+    def calculate_country(field)
+      post_series_to_solver country_series_for(field)
+    end
+
+    def country_series_for(field)
+      CoronaDatumCountry.chronologically.map { |data| { 'ds' => data.reported_at, 'y' => data.send(field) } }
+    end
+
+    def state_series_for(state, field)
+      CoronaDatumState.where(state: state).chronologically.map { |data| { 'ds' => data.reported_at, 'y' => data.send(field) } }
     end
 
     def post_series_to_solver(series)
       decode http.send(:post, '/prophet', encode(series), headers).body
     end
 
-    def insert_data_from_prophet(confirmed, deaths, state = nil)
+    def insert_state_data_from_prophet(confirmed, deaths, state)
       [confirmed, deaths].transpose.each do |confirmed_data, deaths_data|
-        if state
-          CoronaDatumState.create!(reported_at: confirmed_data['ds'], state: state, confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true)
-        else
-          CoronaDatumCountry.create!(reported_at: confirmed_data['ds'], confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true)
-        end
+        CoronaDatumState.create!(reported_at: confirmed_data['ds'], state: state, confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true)
+      end
+    end
+
+    def insert_country_data_from_prophet(confirmed, deaths)
+      [confirmed, deaths].transpose.each do |confirmed_data, deaths_data|
+        CoronaDatumCountry.create!(reported_at: confirmed_data['ds'], confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true)
       end
     end
 

@@ -6,10 +6,6 @@ class CoronaDatumState < CoronaDatum
       datasource_data_for where(state: state).chronologically.last(DATA_SOURCE_DAYS), field, label
     end
 
-    def series_for(state, field)
-      where(state: state).chronologically.map { |data| { 'ds' => data.reported_at, 'y' => data.send(field) } }
-    end
-
     def summary
       where(reported_at: minimum_created_at).conformatively
     end
