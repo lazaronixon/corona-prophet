@@ -11,19 +11,16 @@ class CoronaDatum::Importer
 
     def persist_data_from_csv
       extract_csv.each do |row|
-        CoronaDatum.create! reported_at: row['Date'], state: find_or_initialize_state_by(row['RegionCode'], row['Population']), confirmed: row['Confirmed'].to_i, deaths: row['Deaths'].to_i
+        CoronaDatum.create! reported_at: row['date'], state: find_or_initialize_state_by(row['state']), confirmed: row['totalCases'], deaths: row['deaths']
       end
     end
 
-    def find_or_initialize_state_by(name, population)
-      State.find_or_initialize_by(name: name) do |state|
-        state.name = name
-        state.population = population
-      end
+    def find_or_initialize_state_by(name)
+      State.find_or_initialize_by(name: name)
     end
 
     def extract_csv
-      build_csv.select { |r| r['CountryCode'] == 'BR' && r['RegionCode'].present? }
+      build_csv.select { |r| r['state'] != 'TOTAL' }
     end
 
     def build_csv
@@ -31,6 +28,6 @@ class CoronaDatum::Importer
     end
 
     def resource_url
-      'https://open-covid-19.github.io/data/data.csv'
+      'https://raw.githubusercontent.com/wcota/covid19br/master/cases-brazil-states.csv'
     end
 end
