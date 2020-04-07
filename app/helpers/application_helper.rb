@@ -3,7 +3,7 @@ module ApplicationHelper
     content_for(:page_title) || Rails.application.class.to_s.split('::').first
   end
 
-  def propheted_at
-    CoronaDatum.minimum(:created_at).in_time_zone.to_date
+  def minimum_created_at
+    CoronaDatum.minimum_created_at
   end
 end

@@ -11,7 +11,7 @@ class CoronaDatum < ApplicationRecord
 
     DATA_SOURCE_DAYS = 25
 
-    def propheted_at
+    def minimum_created_at
       minimum(:created_at).in_time_zone.to_date
     end
 

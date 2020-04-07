@@ -11,7 +11,7 @@ class CoronaDatumState < CoronaDatum
     end
 
     def summary
-      where(reported_at: propheted_at).conformatively
+      where(reported_at: minimum_created_at).conformatively
     end
   end
 end
