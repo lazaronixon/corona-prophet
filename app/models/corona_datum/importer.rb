@@ -20,7 +20,7 @@ class CoronaDatum::Importer
     end
 
     def extract_csv
-      build_csv.select { |r| r['state'] != 'TOTAL' }
+      build_csv.select { |r| r['state'] != 'TOTAL' && r['date'].to_date < Date.current }
     end
 
     def build_csv

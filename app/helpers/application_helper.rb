@@ -4,6 +4,6 @@ module ApplicationHelper
   end
 
   def propheted_at
-    CoronaDatum.minimum(:created_at).to_date
+    CoronaDatum.minimum(:created_at).in_time_zone.to_date
   end
 end
