@@ -24,23 +24,19 @@ class CoronaDatum::Prophetizer
     end
 
     def process_state(field, state)
-      result = post_time_series_to_solver(state_time_series_for(state, field))
-      result = cumsum_time_series(result)
-      result.last FORECASTING_DAYS
+      post_time_series_to_solver state_time_series_for(state, field)
     end
 
     def process_country(field)
-      result = post_time_series_to_solver(country_time_series_for(field))
-      result = cumsum_time_series(result)
-      result.last FORECASTING_DAYS
+      post_time_series_to_solver country_time_series_for(field)
     end
 
     def country_time_series_for(field)
-      diff_time_series CoronaDatumCountry.chronologically.map { |data| { 'ds' => data.reported_at, 'y' => data.send(field) } }
+      CoronaDatumCountry.chronologically.map { |data| { 'ds' => data.reported_at, 'y' => data.send(field) } }
     end
 
     def state_time_series_for(state, field)
-      diff_time_series CoronaDatumState.where(state: state).chronologically.map { |data| { 'ds' => data.reported_at, 'y' => data.send(field) } }
+      CoronaDatumState.where(state: state).chronologically.map { |data| { 'ds' => data.reported_at, 'y' => data.send(field) } }
     end
 
     def post_time_series_to_solver(time_series)
@@ -57,14 +53,6 @@ class CoronaDatum::Prophetizer
       [confirmed, deaths].transpose.each do |confirmed_data, deaths_data|
         CoronaDatumCountry.create!(reported_at: confirmed_data['ds'], confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true)
       end
-    end
-
-    def diff_time_series(time_series)
-      [ time_series.first, *time_series.each_cons(2).map { |prev, curr| { 'ds' => curr['ds'], 'y' => curr['y'] - prev['y'] } } ]
-    end
-
-    def cumsum_time_series(time_series)
-      sum = 0; time_series.map { |curr| { 'ds' => curr['ds'], 'yhat' => sum += curr['yhat'] } }
     end
 
     def http
