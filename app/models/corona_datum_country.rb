@@ -5,7 +5,7 @@ class CoronaDatumCountry < CoronaDatum
     end
 
     def summary
-      find_by(reported_at: minimum_created_at)
+      find_by(reported_at: CoronaDatum.minimum_created_at)
     end
   end
 end
