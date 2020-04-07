@@ -27,8 +27,8 @@
     <tfoot>
       <tr>
         <td><%= link_to "Previsão para o Brasil", dashboards_countries_path %></td>
-        <td class="align--right txt--bold"><%= number_with_delimiter @report.sum(&:confirmed) %></td>
-        <td class="align--right txt--bold"><%= number_with_delimiter @report.sum(&:deaths) %></td>
+        <td class="align--right txt--bold"><%= number_with_delimiter @report_country.confirmed %></td>
+        <td class="align--right txt--bold"><%= number_with_delimiter @report_country.deaths %></td>
       </tr>
     </tfoot>
   </table>

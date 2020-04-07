@@ -1,5 +1,6 @@
 class DashboardsController < ApplicationController
   def index
-    @report = CoronaDatum.summary_state
+    @report         = CoronaDatumState.summary
+    @report_country = CoronaDatumCountry.summary
   end
 end

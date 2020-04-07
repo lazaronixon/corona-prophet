@@ -1,28 +1,47 @@
 class CoronaDatum::Prophetizer
   def run
-    State.all.each do |state|
-      confirmed = prophetize(state, :confirmed)
-      deaths    = prophetize(state, :deaths)
-
-      insert_data_from_prophet state, confirmed, deaths
-    end
+    forecast_states
+    forecast_country
   end
 
   private
     FORECASTING_DAYS = 7
 
-    def prophetize(state, field)
-      series   = CoronaDatum.series_for(state, field)
-      response = post_series_to_solver(series)
+    def forecast_states
+      State.all.each do |state|
+        confirmed = prophetize(:confirmed, state)
+        deaths    = prophetize(:deaths, state)
+
+        insert_data_from_prophet confirmed, deaths, state
+      end
+    end
+
+    def forecast_country
+      confirmed = prophetize(:confirmed)
+      deaths    = prophetize(:deaths)
+
+      insert_data_from_prophet confirmed, deaths
+    end
+
+    def prophetize(field, state = nil)
+      if state
+        post_series_to_solver CoronaDatumState.series_for(state, field)
+      else
+        post_series_to_solver CoronaDatumCountry.series_for(field)
+      end
     end
 
     def post_series_to_solver(series)
       decode http.send(:post, '/prophet', encode(series), headers).body
     end
 
-    def insert_data_from_prophet(state, confirmed, deaths)
+    def insert_data_from_prophet(confirmed, deaths, state = nil)
       [confirmed, deaths].transpose.each do |confirmed_data, deaths_data|
-        CoronaDatum.create!(reported_at: confirmed_data['ds'], state: state, confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true)
+        if state
+          CoronaDatumState.create!(reported_at: confirmed_data['ds'], state: state, confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true)
+        else
+          CoronaDatumCountry.create!(reported_at: confirmed_data['ds'], confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true)
+        end
       end
     end
 
