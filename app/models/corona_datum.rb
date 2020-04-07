@@ -17,7 +17,7 @@ class CoronaDatum < ApplicationRecord
 
     private
       def datasource_data_for(relation, field, label)
-        { labels: relation.pluck(:reported_at), datasets: [{ label: label, pointRadius: 6, pointBackgroundColor: relation.map(&:color), data: relation.pluck(field) }] }
+        { labels: relation.pluck(:reported_at), datasets: [{ label: label, pointRadius: 6, pointHoverRadius: 5, pointBackgroundColor: relation.map(&:color), data: relation.pluck(field) }] }
       end
   end
 end
