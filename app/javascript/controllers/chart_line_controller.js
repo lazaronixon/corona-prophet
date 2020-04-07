@@ -3,7 +3,7 @@ import { Chart } from "chart.js"
 
 export default class extends Controller {
   connect() {
-    new Chart(this.element, { type: "line", data: this.datasource, options: { animation: false, scales: this.scales } })
+    new Chart(this.element, { type: "line", data: this.datasource, options: { animation: false, tooltips: this.tootltips, scales: this.scales } })
   }
 
   get datasource() {
@@ -12,5 +12,9 @@ export default class extends Controller {
 
   get scales() {
     return { xAxes: [{ type: 'time', time: { displayFormats: { day: 'DD/MM' } } }] }
+  }
+
+  get tooltips() {
+    return { intersect: false }
   }
 }

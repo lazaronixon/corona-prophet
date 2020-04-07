@@ -3,7 +3,7 @@ class CoronaDatumState < CoronaDatum
 
   class << self
     def datasource_for(state, field, label)
-      datasource_data_for where(state: state).chronologically.last(DATA_SOURCE_DAYS), field, label
+      datasource_data_for where(state: state).chronologically, field, label
     end
 
     def summary
