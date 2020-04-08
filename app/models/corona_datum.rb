@@ -5,11 +5,7 @@ class CoronaDatum < ApplicationRecord
   def color
     prophetized? ? '#1a202c' : '#a0aec0'
   end
-
-  def maximum_confirmed_top
-    maximum()
-  end
-
+  
   class << self
     def prophetized_at
       where(prophetized: true).minimum(:reported_at).in_time_zone.to_date
@@ -27,6 +23,13 @@ class CoronaDatum < ApplicationRecord
             label: 'Confirmados',
             pointBackgroundColor: relation.map(&:color),
             data: relation.pluck(:confirmed)
+          },{
+            label: 'Pico de contágio',
+  					fill: false,
+            pointRadius: 0,
+  					borderDash: [5, 5],
+            borderColor: '#1a202c',
+  					data: relation.count.times.map { confirmed_top }
           }]
         }
       end
