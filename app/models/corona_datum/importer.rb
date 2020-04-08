@@ -11,14 +11,14 @@ class CoronaDatum::Importer
     end
 
     def persist_data_state_from_csv
-      extract_state_csv.each do |row|
-        CoronaDatumState.create! reported_at: row['date'], state: find_or_initialize_state_by(row['state']), confirmed: row['totalCases'], deaths: row['deaths']
+      build_csv(resource_state_url).each do |row|
+        CoronaDatumState.create! reported_at: row['data'], state: find_or_initialize_state_by(row['estado']), confirmed: row['casos.acumulados'], deaths: row['obitos.acumulados']
       end
     end
 
     def persist_data_country_from_csv
-      extract_country_csv.each do |row|
-        CoronaDatumCountry.create! reported_at: row['date'], confirmed: row['totalCases'], deaths: row['deaths']
+      build_csv(resource_br_url).each do |row|
+        CoronaDatumCountry.create! reported_at: row['data'], confirmed: row['casos.acumulados'], deaths: row['obitos.acumulados']
       end
     end
 
@@ -26,19 +26,19 @@ class CoronaDatum::Importer
       State.find_or_initialize_by(name: name)
     end
 
-    def extract_state_csv
-      build_csv.select { |r| r['state'] != 'TOTAL' && r['date'].to_date < Date.current }
+    def extract_csv(resource_url)
+      build_csv(resource_url).select { |r| r['casos.acumulados'] > 0 }
     end
 
-    def extract_country_csv
-      build_csv.select { |r| r['state'] == 'TOTAL' && r['date'].to_date < Date.current }
-    end
-
-    def build_csv
+    def build_csv(resource_url)
       CSV.new(open(resource_url), headers: true)
     end
 
-    def resource_url
-      'https://raw.githubusercontent.com/wcota/covid19br/master/cases-brazil-states.csv'
+    def resource_state_url
+      'https://raw.githubusercontent.com/covid19br/covid19br.github.io/master/dados/EstadosCov19.csv'
+    end
+
+    def resource_br_url
+      'https://raw.githubusercontent.com/covid19br/covid19br.github.io/master/dados/BrasilCov19.csv'
     end
 end

@@ -7,12 +7,8 @@ class CoronaDatum < ApplicationRecord
   end
 
   class << self
-    include ApplicationHelper
-
-    DATA_SOURCE_DAYS = 25
-
-    def minimum_created_at
-      minimum(:created_at).in_time_zone.to_date
+    def minimum_reported_at
+      where(prophetized: true).minimum(:reported_at).in_time_zone.to_date
     end
 
     private
