@@ -5,7 +5,7 @@ class CoronaDatum::Prophetizer
   end
 
   private
-    FORECASTING_DAYS = 7
+    FORECASTING_DAYS = 14
 
     def forecast_states
       State.all.each do |state|
@@ -45,13 +45,13 @@ class CoronaDatum::Prophetizer
 
     def insert_state_data_from_prophet(confirmed, deaths, state)
       [confirmed, deaths].transpose.each do |confirmed_data, deaths_data|
-        CoronaDatumState.create!(reported_at: confirmed_data['ds'], state: state, confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true)
+        CoronaDatumState.create!(reported_at: confirmed_data['ds'], state: state, confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], confirmed_top: confirmed_data['cap'], prophetized: true)
       end
     end
 
     def insert_country_data_from_prophet(confirmed, deaths)
       [confirmed, deaths].transpose.each do |confirmed_data, deaths_data|
-        CoronaDatumCountry.create!(reported_at: confirmed_data['ds'], confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true)
+        CoronaDatumCountry.create!(reported_at: confirmed_data['ds'], confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], confirmed_top: confirmed_data['cap'], prophetized: true)
       end
     end
 

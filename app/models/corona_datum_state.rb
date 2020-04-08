@@ -2,8 +2,12 @@ class CoronaDatumState < CoronaDatum
   belongs_to :state
 
   class << self
-    def datasource_for(state, field, label)
-      datasource_data_for where(state: state).chronologically, field, label
+    def confirmed_datasource_for(state)
+      confirmed_datasource_data_for where(state: state).chronologically, maximum(:confirmed_top)
+    end
+
+    def deaths_datasource_for(state)
+      deaths_datasource_data_for where(state: state).chronologically
     end
 
     def summary

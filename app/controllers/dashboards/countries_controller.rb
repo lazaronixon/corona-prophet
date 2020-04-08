@@ -1,7 +1,7 @@
 class Dashboards::CountriesController < ApplicationController
   def show
     @report     = CoronaDatumCountry.find_by!(reported_at: CoronaDatum.prophetized_at)
-    @confirmed  = CoronaDatumCountry.datasource_for(:confirmed, 'Confirmados')
-    @deaths     = CoronaDatumCountry.datasource_for(:deaths, 'Mortes')
+    @confirmed  = CoronaDatumCountry.confirmed_datasource
+    @deaths     = CoronaDatumCountry.deaths_datasource
   end
 end
