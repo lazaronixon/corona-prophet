@@ -24,11 +24,11 @@ class CoronaDatum::Prophetizer
     end
 
     def process_state(field, state)
-      post_time_series_to_solver state_time_series_for(state, field)
+      post_time_series_to field, state_time_series_for(state, field)
     end
 
     def process_country(field)
-      post_time_series_to_solver country_time_series_for(field)
+      post_time_series_to field, country_time_series_for(field)
     end
 
     def country_time_series_for(field)
@@ -39,8 +39,8 @@ class CoronaDatum::Prophetizer
       CoronaDatumState.where(state: state).chronologically.map { |data| { 'ds' => data.reported_at, 'y' => data.send(field) } }
     end
 
-    def post_time_series_to_solver(time_series)
-      decode http.send(:post, '/prophet', encode(time_series), headers).body
+    def post_time_series_to(field, time_series)
+      decode http.send(:post, "/#{field}", encode(time_series), headers).body
     end
 
     def insert_state_data_from_prophet(confirmed, deaths, state)
