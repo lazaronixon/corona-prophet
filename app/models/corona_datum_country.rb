@@ -9,7 +9,7 @@ class CoronaDatumCountry < CoronaDatum
     end
 
     def summary
-      find_by(reported_at: CoronaDatum.prophetized_at)
+      find_by reported_at: CoronaDatum.prophetized_at
     end
   end
 end

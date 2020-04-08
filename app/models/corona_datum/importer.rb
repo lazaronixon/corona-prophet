@@ -23,7 +23,7 @@ class CoronaDatum::Importer
     end
 
     def find_or_initialize_state_by(name)
-      State.find_or_initialize_by(name: name)
+      State.find_or_initialize_by name: name
     end
 
     def extract_csv(resource_url)
@@ -31,7 +31,7 @@ class CoronaDatum::Importer
     end
 
     def build_csv(resource_url)
-      CSV.new(open(resource_url), headers: true)
+      CSV.new open(resource_url), headers: true
     end
 
     def resource_state_url
