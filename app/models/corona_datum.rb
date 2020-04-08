@@ -27,7 +27,7 @@ class CoronaDatum < ApplicationRecord
             label: 'Confirmados',
             pointBackgroundColor: relation.map(&:color),
             data: relation.pluck(:confirmed)
-          }
+          }]
         }
       end
   end
