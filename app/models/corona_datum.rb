@@ -7,7 +7,7 @@ class CoronaDatum < ApplicationRecord
   end
 
   class << self
-    def minimum_reported_at
+    def prophetized_at
       where(prophetized: true).minimum(:reported_at).in_time_zone.to_date
     end
 
