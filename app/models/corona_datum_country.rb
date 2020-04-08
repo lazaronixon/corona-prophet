@@ -1,7 +1,7 @@
 class CoronaDatumCountry < CoronaDatum
   class << self
     def confirmed_datasource
-      confirmed_datasource_data_for chronologically, maximum(:confirmed_top)
+      confirmed_datasource_data_for chronologically
     end
 
     def deaths_datasource
