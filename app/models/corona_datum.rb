@@ -27,14 +27,7 @@ class CoronaDatum < ApplicationRecord
             label: 'Confirmados',
             pointBackgroundColor: relation.map(&:color),
             data: relation.pluck(:confirmed)
-          }, {
-            label: 'Pico de contágio',
-  					fill: false,
-            pointRadius: 0,
-  					borderDash: [5, 5],
-            borderColor: '#1a202c',
-  					data: relation.count.times.map { confirmed_top }
-          }]
+          }
         }
       end
   end
