@@ -1,5 +1,4 @@
 class CoronaDatum < ApplicationRecord
-  scope :confirmed,       -> { where 'confirmed > 0' }
   scope :chronologically, -> { order :reported_at }
   scope :conformatively,  -> { order confirmed: :desc }
 

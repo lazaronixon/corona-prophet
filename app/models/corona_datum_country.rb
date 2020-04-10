@@ -1,11 +1,11 @@
 class CoronaDatumCountry < CoronaDatum
   class << self
     def confirmed_datasource
-      datasource_data_for_confirmed confirmed.chronologically
+      datasource_data_for_confirmed chronologically
     end
 
     def deaths_datasource
-      datasource_data_for_deaths confirmed.chronologically
+      datasource_data_for_deaths chronologically
     end
 
     def summary
