@@ -3,11 +3,11 @@ class CoronaDatumState < CoronaDatum
 
   class << self
     def confirmed_datasource_for(state)
-      datasource_data_for where(state: state).chronologically, :confirmed
+      datasource_data_for_confirmed where(state: state).confirmed.chronologically
     end
 
     def deaths_datasource_for(state)
-      datasource_data_for where(state: state).chronologically, :deaths
+      datasource_data_for_deaths where(state: state).confirmed.chronologically
     end
 
     def summary

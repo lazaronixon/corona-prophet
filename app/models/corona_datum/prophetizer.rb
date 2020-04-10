@@ -24,11 +24,11 @@ class CoronaDatum::Prophetizer
     end
 
     def process_state(field, state)
-      post_time_series state_time_series_for(state, field)
+      post_time_series state_time_series_for(state, field), field
     end
 
     def process_country(field)
-      post_time_series country_time_series_for(field)
+      post_time_series country_time_series_for(field), field
     end
 
     def country_time_series_for(field)
@@ -39,19 +39,19 @@ class CoronaDatum::Prophetizer
       CoronaDatumState.where(state: state).chronologically.map { |data| { 'ds' => data.reported_at, 'y' => data.send(field) } }
     end
 
-    def post_time_series(time_series)
-      decode http.send(:post, "/prophet", encode(time_series), headers).body
+    def post_time_series(time_series, field)
+      decode http.send(:post, "/#{field}", encode(time_series), headers).body
     end
 
     def insert_state_data_from_prophet(confirmed, deaths, state)
       [confirmed, deaths].transpose.each do |confirmed_data, deaths_data|
-        CoronaDatumState.create! state: state, reported_at: confirmed_data['ds'], confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true
+        CoronaDatumState.create! state: state, reported_at: confirmed_data['ds'], confirmed: confirmed_data['yhat'], confirmed_top: confirmed_data['cap'], deaths: deaths_data['yhat'], prophetized: true
       end
     end
 
     def insert_country_data_from_prophet(confirmed, deaths)
       [confirmed, deaths].transpose.each do |confirmed_data, deaths_data|
-        CoronaDatumCountry.create! reported_at: confirmed_data['ds'], confirmed: confirmed_data['yhat'], deaths: deaths_data['yhat'], prophetized: true
+        CoronaDatumCountry.create! reported_at: confirmed_data['ds'], confirmed: confirmed_data['yhat'], confirmed_top: confirmed_data['cap'], deaths: deaths_data['yhat'], prophetized: true
       end
     end
 
