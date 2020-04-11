@@ -5,7 +5,7 @@ class CoronaDatum::Prophetizer
   end
 
   private
-    FORECASTING_DAYS = 14
+    FORECASTING_DAYS = 21
 
     def forecast_states
       State.all.each do |state|
