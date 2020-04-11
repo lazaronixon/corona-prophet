@@ -10,7 +10,7 @@
   <table>
     <thead>
       <tr>
-        <th></th>
+        <th>#</th>
         <th class="align--right">Confirmados</th>
         <th class="align--right">Mortes</th>
       </tr>
@@ -18,7 +18,7 @@
     <tbody>
       <% @report.each do |row| %>
         <tr>
-          <td><%= link_to "Previsão para #{row.state.name}", [:dashboards, row.state], title: 'Clique para ver a previsão' %></td>
+          <td><%= link_to "Previsão para #{row.state.name}", [:dashboards, row.state], title: 'Clique para ver a previsão', class: 'u-display-b' %></td>
           <td class="align--right"><%= number_with_delimiter row.confirmed %></td>
           <td class="align--right"><%= number_with_delimiter row.deaths %></td>
         </tr>
@@ -26,7 +26,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <td><%= link_to "Previsão para o Brasil", dashboards_countries_path, title: 'Clique para ver a previsão' %></td>
+        <td><%= link_to "Previsão para o Brasil", dashboards_countries_path, title: 'Clique para ver a previsão', class: 'u-display-b' %></td>
         <td class="align--right txt--bold"><%= number_with_delimiter @report_country.try(:confirmed) %></td>
         <td class="align--right txt--bold"><%= number_with_delimiter @report_country.try(:deaths) %></td>
       </tr>
