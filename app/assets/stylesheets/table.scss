@@ -1,0 +1,11 @@
+@import "sass-zero/variables";
+
+.table {
+  &__header th {
+    font-weight: $font-normal;
+    letter-spacing: $tracking-wider;
+    color: $gray-700;
+    font-size: $text-sm;
+    text-transform: uppercase;
+  }
+}
