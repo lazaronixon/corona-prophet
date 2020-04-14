@@ -9,38 +9,58 @@ class CoronaDatum::Prophetizer
 
     def forecast_states
       State.all.each do |state|
-        confirmed = process_state(:confirmed, state)
-        deaths    = process_state(:deaths, state)
+        confirmed = process_state_confirmed_for(state)
+        deaths    = process_state_deaths_for(state)
 
         insert_state_data_from_prophet confirmed, deaths, state
       end
     end
 
     def forecast_country
-      confirmed = process_country(:confirmed)
-      deaths    = process_country(:deaths)
+      confirmed = process_country_confirmed
+      deaths    = process_country_deaths
 
       insert_country_data_from_prophet confirmed, deaths
     end
 
-    def process_state(field, state)
-      post_time_series state_time_series_for(state, field), field
+    def process_state_confirmed_for(state)
+      post_time_series_confirmed state_time_series_confirmed_for(state)
     end
 
-    def process_country(field)
-      post_time_series country_time_series_for(field), field
+    def process_state_deaths_for(state)
+      post_time_series_deaths state_time_series_deaths_for(state)
     end
 
-    def country_time_series_for(field)
-      CoronaDatumCountry.chronologically.map { |data| { 'ds' => data.reported_at, 'y' => data.send(field) } }
+    def process_country_confirmed
+      post_time_series_confirmed country_time_series_confirmed
     end
 
-    def state_time_series_for(state, field)
-      CoronaDatumState.where(state: state).chronologically.map { |data| { 'ds' => data.reported_at, 'y' => data.send(field) } }
+    def process_country_deaths
+      post_time_series_deaths country_time_series_deaths
     end
 
-    def post_time_series(time_series, field)
-      decode http.send(:post, "/#{field}", encode(time_series), headers).body
+    def country_time_series_deaths
+      CoronaDatumCountry.confirmed.chronologically.map { |d| { 'ds' => d.reported_at, 'y' => d.deaths } }
+    end
+
+    def country_time_series_confirmed
+      CoronaDatumCountry.chronologically.map { |d| { 'ds' => d.reported_at, 'y' => d.confirmed } }
+    end
+
+    def state_time_series_deaths_for(state)
+      CoronaDatumState.where(state: state).confirmed.chronologically.map { |d| { 'ds' => d.reported_at, 'y' => d.deaths } }
+    end
+
+    def state_time_series_confirmed_for(state)
+      CoronaDatumState.where(state: state).chronologically.map { |d| { 'ds' => d.reported_at, 'y' => d.confirmed } }
+    end
+
+    def post_time_series_confirmed(time_series)
+      decode http.send(:post, '/confirmed', encode(time_series), headers).body
+    end
+
+    def post_time_series_deaths(time_series)
+      decode http.send(:post, '/deaths', encode(time_series), headers).body
     end
 
     def insert_state_data_from_prophet(confirmed, deaths, state)
