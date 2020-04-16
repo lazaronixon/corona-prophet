@@ -1,4 +1,6 @@
 class CoronaDatum::Prophetizer
+  class ServerError < StandardError; end
+
   def run
     forecast_states
     forecast_country
@@ -13,6 +15,8 @@ class CoronaDatum::Prophetizer
         deaths    = process_state_deaths_for(state)
 
         insert_state_data_from_prophet confirmed, deaths, state
+      rescue StandardError => e
+        Rails.logger.warn "Error prophetizing #{state.name}: #{e.message}"
       end
     end
 
@@ -21,6 +25,8 @@ class CoronaDatum::Prophetizer
       deaths    = process_country_deaths
 
       insert_country_data_from_prophet confirmed, deaths
+    rescue StandardError => e
+      Rails.logger.warn "Error prophetizing country: #{e.message}"
     end
 
     def process_state_confirmed_for(state)
@@ -56,11 +62,11 @@ class CoronaDatum::Prophetizer
     end
 
     def post_time_series_confirmed(time_series)
-      decode http.send(:post, '/confirmed', encode(time_series), headers).body
+      decode_response http.send(:post, '/confirmed', encode(time_series), headers)
     end
 
     def post_time_series_deaths(time_series)
-      decode http.send(:post, '/deaths', encode(time_series), headers).body
+      decode_response http.send(:post, '/deaths', encode(time_series), headers)
     end
 
     def insert_state_data_from_prophet(confirmed, deaths, state)
@@ -81,8 +87,18 @@ class CoronaDatum::Prophetizer
       new_http
     end
 
-    def resource_uri
-      URI('https://corona-prophet-solver.herokuapp.com')
+    def decode_response(response)
+      check_response_status response
+      decode response.body
+    end
+
+    def check_response_status(response)
+      case response.code.to_i
+      when 200..300
+         # Do-nothing
+      when 500..600
+        raise ServerError.new(response), 'Server error'
+      end
     end
 
     def decode(string)
@@ -95,5 +111,9 @@ class CoronaDatum::Prophetizer
 
     def headers
       { 'Content-Type' => 'application/json', 'periods' => FORECASTING_DAYS.to_s }
+    end
+
+    def resource_uri
+      URI('https://corona-prophet-solver.herokuapp.com')
     end
 end
