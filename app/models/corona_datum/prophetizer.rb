@@ -46,7 +46,7 @@ class CoronaDatum::Prophetizer
     end
 
     def country_time_series_deaths
-      CoronaDatumCountry.confirmed.chronologically.map { |d| { 'ds' => d.reported_at, 'y' => d.deaths } }
+      CoronaDatumCountry.chronologically.map { |d| { 'ds' => d.reported_at, 'y' => d.deaths } }
     end
 
     def country_time_series_confirmed
@@ -54,7 +54,7 @@ class CoronaDatum::Prophetizer
     end
 
     def state_time_series_deaths_for(state)
-      CoronaDatumState.where(state: state).confirmed.chronologically.map { |d| { 'ds' => d.reported_at, 'y' => d.deaths } }
+      CoronaDatumState.where(state: state).chronologically.map { |d| { 'ds' => d.reported_at, 'y' => d.deaths } }
     end
 
     def state_time_series_confirmed_for(state)
