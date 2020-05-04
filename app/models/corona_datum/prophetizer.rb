@@ -7,7 +7,7 @@ class CoronaDatum::Prophetizer
   end
 
   private
-    FORECASTING_DAYS = 21
+    FORECASTING_DAYS = 45
 
     def forecast_states
       State.all.each do |state|
@@ -62,22 +62,22 @@ class CoronaDatum::Prophetizer
     end
 
     def post_time_series_confirmed(time_series)
-      decode_response http.send(:post, '/confirmed', encode(time_series), headers)
+      decode_response http.send(:post, '/prophet', encode(time_series), headers)
     end
 
     def post_time_series_deaths(time_series)
-      decode_response http.send(:post, '/deaths', encode(time_series), headers)
+      decode_response http.send(:post, '/prophet', encode(time_series), headers)
     end
 
     def insert_state_data_from_prophet(confirmed, deaths, state)
       [confirmed, deaths].transpose.each do |confirmed_data, deaths_data|
-        CoronaDatumState.create! state: state, reported_at: confirmed_data['ds'], confirmed: confirmed_data['yhat'], confirmed_top: confirmed_data['cap'], deaths: deaths_data['yhat'], prophetized: true
+        CoronaDatumState.create! state: state, reported_at: confirmed_data['ds'], confirmed: confirmed_data['yhat'], confirmed_top: confirmed_data['cap'], deaths: deaths_data['yhat'], deaths_top: deaths_data['cap'], prophetized: true
       end
     end
 
     def insert_country_data_from_prophet(confirmed, deaths)
       [confirmed, deaths].transpose.each do |confirmed_data, deaths_data|
-        CoronaDatumCountry.create! reported_at: confirmed_data['ds'], confirmed: confirmed_data['yhat'], confirmed_top: confirmed_data['cap'], deaths: deaths_data['yhat'], prophetized: true
+        CoronaDatumCountry.create! reported_at: confirmed_data['ds'], confirmed: confirmed_data['yhat'], confirmed_top: confirmed_data['cap'], deaths: deaths_data['yhat'], deaths_top: deaths_data['cap'], prophetized: true
       end
     end
 

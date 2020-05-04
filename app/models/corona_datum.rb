@@ -24,7 +24,13 @@ class CoronaDatum < ApplicationRecord
       end
 
       def datasource_data_for_deaths(relation)
-        { labels: relation.pluck(:reported_at), datasets: [{ label: 'Mortes', pointBackgroundColor: relation.map(&:color), data: relation.pluck(:deaths) }] }
+        {
+          labels: relation.pluck(:reported_at),
+          datasets: [
+            { label: 'Mortes', pointBackgroundColor: relation.map(&:color), data: relation.pluck(:deaths) },
+            { label: 'Pico de mortes', borderDash: [5, 5], borderColor: '#1a202c', pointRadius: 0, fill: false, data: relation.pluck(:deaths_top) }
+          ]
+        }
       end
   end
 end
