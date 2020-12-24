@@ -12,13 +12,13 @@ class CoronaDatum::Importer
 
     def persist_data_state_from_csv
       build_csv(resource_state_url).each do |row|
-        CoronaDatumState.create! reported_at: row['data'], state: find_or_initialize_state_by(row['estado']), confirmed: row['casos.acumulados'], deaths: row['obitos.acumulados']
+        CoronaDatumState.create! reported_at: row['data'], state: find_or_initialize_state_by(row['estado']), confirmed: row['novos.casos'], deaths: row['obitos.novos']
       end
     end
 
     def persist_data_country_from_csv
       build_csv(resource_br_url).each do |row|
-        CoronaDatumCountry.create! reported_at: row['data'], confirmed: row['casos.acumulados'], deaths: row['obitos.acumulados']
+        CoronaDatumCountry.create! reported_at: row['data'], confirmed: row['novos.casos'], deaths: row['obitos.novos']
       end
     end
 

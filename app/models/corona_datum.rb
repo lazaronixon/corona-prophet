@@ -14,13 +14,7 @@ class CoronaDatum < ApplicationRecord
 
     private
       def datasource_data_for_confirmed(relation)
-        {
-          labels: relation.pluck(:reported_at),
-          datasets: [
-            { label: 'Confirmados', pointBackgroundColor: relation.map(&:color), data: relation.pluck(:confirmed) },
-            { label: 'Pico de contágio', borderDash: [5, 5], borderColor: '#1a202c', pointRadius: 0, fill: false, data: relation.pluck(:confirmed_top) }
-          ]
-        }
+        { labels: relation.pluck(:reported_at), datasets: [{ label: 'Confirmados', pointBackgroundColor: relation.map(&:color), data: relation.pluck(:confirmed) }] }
       end
 
       def datasource_data_for_deaths(relation)
